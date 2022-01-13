@@ -1,8 +1,11 @@
-﻿#include <iostream>
-#include"dilated_conv.cc"
+#include <iostream>
+#include "dv.cc"
 
 int main(){
 
+    int filter[3][3]={{1,1,1 },
+                      {1,-2,1},
+                      {1,1,1 }};
     int array[9][9]={{1,2,3,4,5,6,7,8,9},
                      {1,2,3,4,5,6,7,8,9},
                      {1,2,3,4,5,6,7,8,9},    
@@ -12,38 +15,42 @@ int main(){
                      {1,2,3,4,5,6,7,8,9},
                      {1,2,3,4,5,6,7,8,9},
                      {1,2,3,4,5,6,7,8,9}};
-
-    int filter[3][3]={{1,1,1 },
-                      {1,-2,1},
-                      {1,1,1 }};
-
-    int new_filter[5][5];
-    dilate(filter,new_filter);
-    std::cout<<"THE NEW FILTER: \n";
-    for(int i=0;i<5;i++){
-        for(int j=0;j<5;j++){
-            std::cout<<new_filter[i][j]<< " ";
-        }
-        std::cout<<std::endl;
+    int *result;
+    int *p;
+    std::cout<<"\n3x3 Filter dilate 2 degrees:";
+    p = dilate(filter[0],3,3,2);
+    for(int i=0;i<25;i++){
+            if(i%5==0){ std::cout<<"\n";}
+            else{std::cout<<" ";}
+            std::cout<<p[i];
     }
-    std::cout<<"THE OLD ARRAY: \n";
-    for(int i=0;i<9;i++){
-        for(int j=0;j<9;j++){
-            std::cout<<array[i][j]<< " ";
-        }
-        std::cout<<std::endl;
-    }
-
-    d_conv(array,new_filter);
-
-    std::cout<<"THE NEW ARRAY: \n";
-    for(int i=0;i<9;i++){
-        for(int j=0;j<9;j++){
-            std::cout<<array[i][j]<< " ";
-        }
-        std::cout<<std::endl;
-    }
-
-
+    result=conv(array[0],9,9,p);
+ // std::cout<<"\n3x3 Filter dilate 3 degrees:";
+ //  p = dilate(filter[0],3,3,3);
+ //  for(int i=0;i<49;i++){
+ //          if(i%7==0){ std::cout<<"\n";}
+ //          else{std::cout<<" ";}
+ //          std::cout<<p[i];
+ //  }
+ //  
+ //  int filter1[5][5]={{1,1,1 ,1,1},
+ //                    {1,1,1 ,1,1},
+ //                    {1,1,-2,1,1},
+ //                    {1,1,1 ,1,1},
+ //                    {1,1,1 ,1,1}};
+ // std::cout<<"\n5x5 Filter dilate 2 degrees:";
+ //  p = dilate(filter1[0],5,5,2);
+ //  for(int i=0;i<81;i++){
+ //          if(i%9==0){ std::cout<<"\n";}
+ //          else{std::cout<<" ";}
+ //          std::cout<<p[i];
+ //  }
+ // std::cout<<"\n"<<p[-1]<<" : "<<p[-2];
+    for(int i=0;i<81;i++){
+        if(i%9==0){ std::cout<<"\n";}
+        else{std::cout<<" ";}
+        std::cout<<result[i];
+    }   
     return 0;
 }
+
