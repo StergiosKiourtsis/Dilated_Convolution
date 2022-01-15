@@ -1,8 +1,8 @@
 #include <iostream>
 
-int *dilate(int *kernel,int rows,int collumns,int degree){
+int *dilate(int *kernel,int rows,int columns,int degree){
     int N=(rows-1)*(degree-1)+rows;
-    int M=(collumns-1)*(degree-1)+collumns;
+    int M=(columns-1)*(degree-1)+columns;
     int *filter = new int[N*M];
     filter[-1]=N;
     filter[-2]=M;
@@ -18,33 +18,31 @@ int *dilate(int *kernel,int rows,int collumns,int degree){
     return filter;
 }
 
-int *conv(int *image,int *filter, int rows, int columns){ // DEN EINAI TELEIVMENH
-    int nd=filter[-1];
+int *conv(int *image,int *filter, int rows, int columns){ 
+    int filter_size=filter[-1];
     int pixel; 
-    int kx=nd/2;
-    int ky=nd/2;
-    int ii;
-    int jj;
+    int kx=filter_size/2;
+    int ky=filter_size/2;
+    int i,j,ii,jj,k,l;
     int dim = rows*columns;
     int *new_image = new int[dim];
-    //Οι δύο επόμενες for διατρέχουν την εικόνα
-	for(int i=0;i<rows;i++){
-		for(int j=0;j<columns;j++){
-            pixel = 0;
-            //Αυτές διατρέχουν το φίλτρο
-			for(int k=0;k<nd;k++){
-                for(int l=0;l<nd;l++){
-
-                    ii = i + kx-k;
-                    jj = j + ky-l;
-                    if (ii>=0 && ii<columns && jj>=0 && jj<columns){
-                        pixel +=image[ii*columns+jj] * filter[k*nd+l];
-                    }
-					
-				}	
-			}
-            new_image[i*rows+j] = pixel ;
-		}
-	}	
+    for(int pixel_number=0;pixel_number<dim;pixel_number++){
+        i = pixel_number/columns;
+        j = pixel_number%columns;
+        pixel =0;
+        for(int filter_pixel=0;filter_pixel<filter_size*filter_size;filter_pixel++){
+            k = filter_pixel/filter_size;
+            l = filter_pixel%filter_size;
+            ii=i+kx-k;
+            jj=j+kx-l;
+            if(ii>=0 && ii<rows && jj>=0 && jj<columns){
+                pixel+=image[ii*columns+jj]*filter[k*filter_size+l];
+            }else{
+                pixel +=0;
+            }
+        }
+        new_image[i*columns+j]=pixel;
+    }
+	
     return new_image;
 }
