@@ -18,24 +18,33 @@ int *dilate(int *kernel,int rows,int collumns,int degree){
     return filter;
 }
 
-int *conv(int *picture,int rows,int collums,int *kernel){
-    int *x=new int[rows*collums];
-    int filter_size=kernel[-1];
-    int pixel;
-    int kx=filter_size/2;
+int *conv(int *image,int *filter, int rows, int columns){ // DEN EINAI TELEIVMENH
+    int nd=filter[-1];
+    int pixel; 
+    int kx=nd/2;
+    int ky=nd/2;
     int ii;
+    int jj;
+    int dim = rows*columns;
+    int *new_image = new int[dim];
+    //Οι δύο επόμενες for διατρέχουν την εικόνα
+	for(int i=0;i<rows;i++){
+		for(int j=0;j<columns;j++){
+            pixel = 0;
+            //Αυτές διατρέχουν το φίλτρο
+			for(int k=0;k<nd;k++){
+                for(int l=0;l<nd;l++){
 
-    for(int i=0;i<rows*collums;i++){
-        pixel=0;
-
-        for(int j=0;j<filter_size*filter_size;j++){
-            if(((j/filter_size)*collums)+(j%filter_size)+i-((filter_size/2)*collums)-(filter_size/2)<0 || ((j/filter_size)*collums)+(j%filter_size)+i-((filter_size/2)*collums)-(filter_size/2)>rows*collums){
-                pixel+=0;
-            }else{    
-                pixel+=picture[((j/filter_size)*collums)+(j%filter_size)+i-((filter_size/2)*collums)-(filter_size/2)]*kernel[j];    
-            }
-        }
-        x[i]=pixel;
-    }
-    return x;
+                    ii = i + kx-k;
+                    jj = j + ky-l;
+                    if (ii>=0 && ii<columns && jj>=0 && jj<columns){
+                        pixel +=image[ii*columns+jj] * filter[k*nd+l];
+                    }
+					
+				}	
+			}
+            new_image[i*rows+j] = pixel ;
+		}
+	}	
+    return new_image;
 }
