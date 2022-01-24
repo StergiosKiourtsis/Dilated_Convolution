@@ -23,28 +23,34 @@ void convBuf(int image[N][M],int filter[R][C],int result[N][M]){
 	int count=kx+1;
     for(i=0;i<N;i++){
 		if(i==0){
-			for(r=0; r<count; r++){
+			for(r=0; r<=kx; r++){
 				for(j=0; j<M; j++){
-					line_buffer[r][j] = image[i+r][j];
+					line_buffer[R-1-r][j] = image[kx-r][j];
 				}
 			}
-		}
-		else if(i<N-R){
-			for(j=0; j<M; j++){
-				line_buffer[0][j] = image[count][j];
-			}
-			for(r=1; r<R; r++){
+		}else if(i<=N-kx){
+			for(r=0; r<R; r++){
 				for(j=0; j<M; j++){
-						line_buffer[r][j] = line_buffer[r-1][j];
+						if(r==R-1){
+							line_buffer[r][j] = image[i+kx][j];
+						}else{
+							line_buffer[r][j] = line_buffer[r+1][j];
+						}
 				}
+			}
+		}else{
+			for(r=0; r<R; r++){
+				for(j=0; j<M; j++){
+						line_buffer[r][j] = line_buffer[r+1][j];
+			    }
 			}
 		}
 		for(j=0;j<M;j++){
 			pixel=0;
 			for(k=0;k<R;k++){
 				for(l=0;l<C;l++){
-					ii=i+kx-k;
-					jj=j+kx-l;
+					ii=i-kx+k;
+					jj=j-kx+l;
 					if(ii>=0 && ii<N && jj>=0 && jj<M){
 						pixel+=line_buffer[k][jj]*filter[k][l]; 
 					}else{ 
@@ -54,6 +60,5 @@ void convBuf(int image[N][M],int filter[R][C],int result[N][M]){
 			}
 		result[i][j]=pixel;
 		}
-		count++;
 	}
  }
