@@ -18,9 +18,7 @@ void convBuf(int image[N][M],int filter[R][C],int result[N][M]){
 	int line_buffer[R][M];
     int pixel;
     int kx=R/2;
-    int i,j,ii,jj,k,l,r; 
-    int dim = N*M; 	
-	int count=kx+1;
+    int i,j,ii,jj,k,l,r;  	
     for(i=0;i<N;i++){
 		if(i==0){
 			for(r=0; r<=kx; r++){
