@@ -20,7 +20,7 @@ int main(){
     int result1[10][10]; 
     int result2[10][10];
     //new_rows = (rows-1)*(degree-1)+rows
-    //int size = (3-1)*(2-1)+3;
+    //int size = (3-1)*(3-1)+3;
     int dil_filter[7][7];
 
 //TEST 2 WITH A 3*3 FILTER AND 2 DEGREES OF DILATION  
