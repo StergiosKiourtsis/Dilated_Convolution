@@ -28,7 +28,7 @@ void convBuf(int image[N][M],int filter[R][C],int result[N][M]){
 					line_buffer[R-1-r][j] = image[kx-r][j];
 				}
 			}
-		}else if(i<=N-kx){
+		}else if(i<N-kx && i>0){
 			for(r=0; r<R; r++){
 				for(j=0; j<M; j++){
 						if(r==R-1){
@@ -53,6 +53,34 @@ void convBuf(int image[N][M],int filter[R][C],int result[N][M]){
 					jj=j-kx+l;
 					if(ii>=0 && ii<N && jj>=0 && jj<M){
 						pixel+=line_buffer[k][jj]*filter[k][l]; 
+					}else{ 
+					pixel +=0; 
+					} 
+				} 
+			}
+		result[i][j]=pixel;
+		}
+	}
+ }
+
+
+ template<int N,int M,int R,int C>
+void conv(int image[N][M],int filter[R][C],int result[N][M]){ 
+	int line_buffer[R][M];
+    int pixel;
+    int kx=R/2;
+    int i,j,ii,jj,k,l; 
+    int dim = N*M; 
+
+    for(i=0;i<N;i++){
+		for(j=0;j<M;j++){
+			pixel=0;
+			for(k=0;k<R;k++){
+				for(l=0;l<C;l++){
+					ii=i+kx-k;
+					jj=j+kx-l;
+					if(ii>=0 && ii<N && jj>=0 && jj<M){
+						pixel+=image[ii][jj]*filter[k][l]; 
 					}else{ 
 					pixel +=0; 
 					} 
