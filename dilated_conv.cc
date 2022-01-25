@@ -1,5 +1,5 @@
-template<int N,int M,int R,int C>
-void dilate(int in_filter[N][M],int out_filter[R][C],int degree){
+template<typename T,int N,int M,int R,int C>
+void dilate(T in_filter[N][M],T out_filter[R][C],T degree){
     int count=0;
     for(int i=0;i<R;i++){
 		for(int j=0;j<C;j++){
@@ -13,12 +13,14 @@ void dilate(int in_filter[N][M],int out_filter[R][C],int degree){
 	}
 }
 
-template<int N,int M,int R,int C>
-void convBuf(int image[N][M],int filter[R][C],int result[N][M]){ 
-	int line_buffer[R][M];
-    int pixel;
-    int kx=R/2;
-    int i,j,ii,jj,k,l,r;  	
+template<typename T,int N,int M,int R,int C>
+void convBuf(T image[N][M],T filter[R][C],T result[N][M]){ 
+	T line_buffer[R][M];
+    T pixel;
+    T kx=R/2;
+    T i,j,ii,jj,k,l,r; 
+    T dim = N*M; 	
+	T count=kx+1;
     for(i=0;i<N;i++){
 		if(i==0){
 			for(r=0; r<=kx; r++){
@@ -60,3 +62,4 @@ void convBuf(int image[N][M],int filter[R][C],int result[N][M]){
 		}
 	}
  }
+
