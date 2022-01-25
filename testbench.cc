@@ -32,15 +32,6 @@ int main(){
 		}
 		std::cout<<"\n";
 	}
-  std::cout<<"\n3x3 Filter Dilation Degree:2 Result: \n";
-   conv<10,10,7,7>(array,dil_filter,result1);
-   for(int i=0;i<10;i++){
-		for(int j=0;j<10;j++){
-				std::cout<<result1[i][j]<<" ";
-		}
-		std::cout<<"\n";
-	}
-
     std::cout<<"\n BUFFER TIME! \n";
     convBuf<10,10,7,7>(array,dil_filter,result2);
    for(int i=0;i<10;i++){
