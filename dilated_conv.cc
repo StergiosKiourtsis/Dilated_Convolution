@@ -51,31 +51,3 @@ void convBuf(T image[N][M],T filter[R][C],T result[N][M]){
 		}
 	}
  }
-
-
- template<typename T,int N,int M,int R,int C>
-void conv(T image[N][M],T filter[R][C],T result[N][M]){ 
-	T line_buffer[R][M];
-    T pixel;
-    T kx=R/2;
-    T i,j,ii,jj,k,l; 
-    T dim = N*M; 
-
-    for(i=0;i<N;i++){
-		for(j=0;j<M;j++){
-			pixel=0;
-			for(k=0;k<R;k++){
-				for(l=0;l<C;l++){
-					ii=i+kx-k;
-					jj=j+kx-l;
-					if(ii>=0 && ii<N && jj>=0 && jj<M){
-						pixel+=image[ii][jj]*filter[k][l]; 
-					}else{ 
-					pixel +=0; 
-					} 
-				} 
-			}
-		result[i][j]=pixel;
-		}
-	}
- }
