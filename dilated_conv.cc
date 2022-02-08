@@ -1,84 +1,81 @@
-#include "ac_channel.h"
-
 template<typename T,int N,int M,int R,int C>
-void dilate(T in_filter[N][M],T out_filter[R][C],T degree,ac_channel<T> &line_in,ac_channel<T> &line_out){
+void dilate(T in_filter[N][M],T out_filter[R][C],T degree){
     int count=0;
     for(int i=0;i<R;i++){
 		for(int j=0;j<C;j++){
 			if(i%degree==0 && j%degree==0){
-				
-				line_in.write(in_filter[count/M][count%M]);
-				line_out.read(out_filter[i][j]);
-				//out_filter[i][j]=in_filter[count/M][count%M];
+				out_filter[i][j]=in_filter[count/M][count%M];
 				count++;
 			}else{
-				line_in.write(0);
-				line_out.read(out_filter[i][j]);
-				//out_filter[i][j]=0;
+				out_filter[i][j]=0;
 			}
 		}
 	}
 }
 
 template<typename T,int N,int M,int R,int C>
-void convBuf(T image[N][M],T filter[R][C],T result[N][M],ac_channel<T> &line_in,ac_channel<T> &line_out,ac_channel<T> &line_buff_in,ac_channel<T> &line_buff_out){ 
+void convBuf(T image[N][M],T filter[R][C],T result[N][M]){ 
 	T line_buffer[R][M];
+	T *p = &line_buffer[0][0];
     T pixel;
     T kx=R/2;
     T i,j,ii,jj,k,l,r; 
-	T tmp;
+    T dim = N*M; 	
+	T count=kx+1;
     for(i=0;i<N;i++){
-		if(i==0){
-			for(r=0; r<=kx; r++){
-				for(j=0; j<M; j++){
-					line_in.write(image[kx-r][j]);
-					line_out.read(tmp);
-					line_buff_in.write(tmp);
-					line_buff_out.read(line_buffer[R-1-r][j]);
-					//line_buffer[R-1-r][j] = image[kx-r][j];
+		for(j=0;j<M;j++){
+
+			if(i*M+j>=(kx+1)*M){
+				pixel=0;
+				for(k=0;k<R;k++){
+					for(l=0;l<C;l++){
+						ii=(i-kx-1)-kx+k;
+						jj= j-kx+l;
+						int  r=k;
+						int  c= 0-kx+l;						
+						if(ii>=0 && ii<N && jj>=0 && jj<M){
+							pixel+=line_buffer[r][c]*filter[k][l]; 
+						}else{ 
+							pixel +=0; 
+						} 
+					} 
 				}
+				result[i-(kx+1)][j]=pixel;
+			}else{
+				result[N-1-i][j]=0;
 			}
-		}else if(i<N-kx && i>0){
-			for(r=0; r<R; r++){
-				for(j=0; j<M; j++){
-						if(r==R-1){
-							
-							line_in.write(image[i+kx][j]);
-							line_out.read(tmp);
-							line_buff_in.write(tmp);
-							line_buff_out.read(line_buffer[r][j]);							
-							//line_buffer[r][j] = image[i+kx][j];
-							
-						}else{
-							line_buffer[r][j] = line_buffer[r+1][j];
-						}
-				}
+			for(int a=0;a<R*M-1;a++){
+				p[a]=p[a+1];
 			}
-		}else{
-			for(r=0; r<R; r++){
-				for(j=0; j<M; j++){
-						line_buffer[r][j] = line_buffer[r+1][j];
-			    }
-			}
+			line_buffer[R-1][M-1]=image[i][j];
 		}
+	}
+ }
+
+
+ template<typename T,int N,int M,int R,int C>
+void conv(T image[N][M],T filter[R][C],T result[N][M]){ 
+	T line_buffer[R][M];
+    T pixel;
+    T kx=R/2;
+    T i,j,ii,jj,k,l; 
+    T dim = N*M; 
+
+    for(i=0;i<N;i++){
 		for(j=0;j<M;j++){
 			pixel=0;
 			for(k=0;k<R;k++){
 				for(l=0;l<C;l++){
-					ii=i-kx+k;
-					jj=j-kx+l;
+					ii=i+kx-k;
+					jj=j+kx-l;
 					if(ii>=0 && ii<N && jj>=0 && jj<M){
-						line_buff_in.write(line_buffer[k][jj]);
-						line_in.write(filter[k][l]);
-						pixel+=line_buff_out.read()*line_out.read(); 
+						pixel+=image[ii][jj]*filter[k][l]; 
 					}else{ 
 					pixel +=0; 
 					} 
 				} 
 			}
-		line_in.write(pixel);
-		line_out.read(result[i][j]);
+		result[i][j]=pixel;
 		}
 	}
  }
-
