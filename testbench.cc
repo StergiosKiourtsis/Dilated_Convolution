@@ -27,8 +27,13 @@ int main(){
   //int size = (3-1)*(2-1)+3;
   ac_int<8,false> dil_filter[7][7];
 
-  dilate<ac_int<8,false>,3,3,7,7>(filter,dil_filter,3);  	
-  convBuf<ac_int<8,false>,10,10,7,7>(array,dil_filter,result);
+
+  //dilate<ac_int<8,false>,3,3,7,7>(filter,dil_filter,3);  	
+  //convBuf<ac_int<8,false>,10,10,7,7>(array,dil_filter,result);
+  dilated_conv<ac_int<8,false>,3,3,7,7,10,10> obj1;
+
+  obj1.dilate(filter,dil_filter,3);
+  obj1.convBuf(array,dil_filter,result);
 
   return 0;
 }
