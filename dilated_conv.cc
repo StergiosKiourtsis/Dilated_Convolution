@@ -5,6 +5,7 @@ public:
 
 void dilate(T in_filter[N][M],T out_filter[R][C],T degree);
 void convBuf(T image[K][L],T filter[R][C],T result[K][L]);
+void shift(T linebuffer[R][L],T pixel);
 };
 
 
@@ -28,7 +29,6 @@ void dilated_conv<T,N,M,R,C,K,L>::dilate(T in_filter[N][M],T out_filter[R][C],T 
 template<class T,int N,int M , int R,int C,int K ,int L >
 void dilated_conv<T,N,M,R,C,K,L>::convBuf(T image[K][L],T filter[R][C],T result[K][L]){ 
 	T line_buffer[R][L];
-	T *p = &line_buffer[0][0];
     T kx=R/2;
     T i,j,ii,jj,k,l,c; 
     for(i=0;i<K;i++){
@@ -50,15 +50,20 @@ void dilated_conv<T,N,M,R,C,K,L>::convBuf(T image[K][L],T filter[R][C],T result[
 			}//else{
 			 //	result[K-1-i][j]=0;
 			 //}
-			for(int a=0;a<R*L;a++){
-				if(a!=R*L-1){
-				    p[a]=p[a+1];
-				}else{
-				    p[a]= image[i][j];
-			    }
-			}
-
+			shift(line_buffer,image[i][j]);
 		}
 	}
-	
+
  }
+
+ template<class T,int N,int M , int R,int C,int K ,int L >
+void dilated_conv<T,N,M,R,C,K,L>::shift(T line_buffer[R][L],T pixel){
+	for(int a=0;a<R*L;a++){
+	    T *p = &line_buffer[0][0];
+		if(a!=R*L-1){
+		    p[a]=p[a+1];
+		}else{
+		    p[a]=pixel;
+	    }
+	}
+}
