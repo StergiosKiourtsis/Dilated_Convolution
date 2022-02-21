@@ -29,33 +29,33 @@ template<class T,int N,int M , int R,int C,int K ,int L >
 void dilated_conv<T,N,M,R,C,K,L>::convBuf(T image[K][L],T filter[R][C],T result[K][L]){ 
 	T line_buffer[R][L];
 	T *p = &line_buffer[0][0];
-    T pixel;
     T kx=R/2;
     T i,j,ii,jj,k,l,c; 
     for(i=0;i<K;i++){
 		for(j=0;j<L;j++){
 			if(i*L+j>=(kx+1)*L){
-				pixel=0;
 				for(k=0;k<R;k++){
 					for(l=0;l<C;l++){
 						ii=(i-kx-1)-kx+k;
 						jj= j-kx+l;
 						c= 0-kx+l;						
 						if(ii>=0 && ii<K && jj>=0 && jj<L){
-							pixel+=line_buffer[k][c]*filter[k][l]; 
+							result[i-(kx+1)][j]+=line_buffer[k][c]*filter[k][l]; 
 						}else{ 
-							pixel +=0; 
+					        result[i-(kx+1)][j]+=0; 
 						} 
 					} 
 				}
-				result[i-(kx+1)][j]=pixel;
-			}else{
-				result[K-1-i][j]=0;
+			}//else{
+			//	result[K-1-i][j]=0;
+			//}
+			for(int a=0;a<R*L;a++){
+				if(a!=R*L-1){
+				    p[a]=p[a+1];
+				}else{
+				    p[a]= image[i][j];
+			    }
 			}
-			for(int a=0;a<R*L-1;a++){
-				p[a]=p[a+1];
-			}
-			line_buffer[R-1][L-1]=image[i][j];
 		}
 	}
  }
