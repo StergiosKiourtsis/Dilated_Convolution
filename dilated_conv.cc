@@ -35,9 +35,6 @@ void dilated_conv<T,N,M,R,C,K,L>::convBuf(T image[K][L],T filter[N][M],T result[
     for(i=0;i<K;i++){
 		for(j=0;j<L;j++){
 			conv(kx,i,j,line_buffer,result,new_filter);
-			//else{
-			//	result[K-1-i][j]=0;
-		    //}
 			shift(line_buffer,image[i][j]);
 		}
 	}
