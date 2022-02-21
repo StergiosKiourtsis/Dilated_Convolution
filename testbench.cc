@@ -31,8 +31,7 @@ int main(){
   //convBuf<ac_int<8,false>,10,10,7,7>(array,dil_filter,result);
   dilated_conv<ac_int<8,false>,3,3,7,7,10,10> obj1;
 
-  obj1.dilate(filter,dil_filter,3);
-  obj1.convBuf(array,dil_filter,result);
+  obj1.convBuf(array,filter,result,3);
 
   return 0;
 }
