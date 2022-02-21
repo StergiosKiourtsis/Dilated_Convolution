@@ -33,6 +33,7 @@ void dilated_conv<T,N,M,R,C,K,L>::convBuf(T image[K][L],T filter[R][C],T result[
     T i,j,ii,jj,k,l,c; 
     for(i=0;i<K;i++){
 		for(j=0;j<L;j++){
+
 			if(i*L+j>=(kx+1)*L){
 				for(k=0;k<R;k++){
 					for(l=0;l<C;l++){
@@ -47,8 +48,8 @@ void dilated_conv<T,N,M,R,C,K,L>::convBuf(T image[K][L],T filter[R][C],T result[
 					} 
 				}
 			}//else{
-			//	result[K-1-i][j]=0;
-			//}
+			 //	result[K-1-i][j]=0;
+			 //}
 			for(int a=0;a<R*L;a++){
 				if(a!=R*L-1){
 				    p[a]=p[a+1];
@@ -56,6 +57,8 @@ void dilated_conv<T,N,M,R,C,K,L>::convBuf(T image[K][L],T filter[R][C],T result[
 				    p[a]= image[i][j];
 			    }
 			}
+
 		}
 	}
+	
  }
